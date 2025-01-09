@@ -1,3 +1,5 @@
+You should stop docker container with PostgreSQL after!
+
 # Payment API Documentation
 
 ## Overview
