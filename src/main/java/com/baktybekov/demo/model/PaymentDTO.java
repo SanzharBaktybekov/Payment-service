@@ -15,7 +15,6 @@ public record PaymentDTO(
         @DecimalMin(value = "0", inclusive = false, message = "Amount should be more than zero!")
         @NotNull(message = "Amount should be provided!")
         BigDecimal amount,
-        @NotNull(message = "Operation date should be provided!")
         @PastOrPresent(message = "Operation date can not be in future!")
         LocalDateTime operationDate) {
 }

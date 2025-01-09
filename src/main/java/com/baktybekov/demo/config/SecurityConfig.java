@@ -41,11 +41,9 @@ public class SecurityConfig {
 
     @Bean
     public ApplicationRunner applicationRunner(
-            UserDetailsService userDetailsService,
-            SampleUserDataProperties properties
-            ) {
+            UserDetailsService userDetailsService, SampleUserDataProperties properties
+    ) {
         var service = (UserService) userDetailsService;
-
         return args -> {
             try {
                 service.registerNewUser(properties.toUser());

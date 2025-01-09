@@ -21,11 +21,7 @@ public class User implements UserDetails {
     @Pattern(message = "password must be at least 8 characters long", regexp = "^.{8,}$")
     private String password;
 
-    public User() {
-
-    }
-
-
+    public User() {}
     public User(String name, String password) {
         this.username = name;
         this.password = password;
