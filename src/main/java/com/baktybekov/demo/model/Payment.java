@@ -1,5 +1,6 @@
 package com.baktybekov.demo.model;
 
+import com.baktybekov.demo.exception.ReceiverOfPaymentNotFound;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,6 +20,10 @@ public class Payment {
     private LocalDateTime operationDate;
 
     public static Payment of(PaymentDTO paymentDTO, String name) {
+        if(name.equals(paymentDTO.to())) {
+            throw new ReceiverOfPaymentNotFound("Destination can not be equal to source");
+        }
+
         var payment =  new Payment();
         payment.setId(UUID.randomUUID());
         payment.setSource(name);
