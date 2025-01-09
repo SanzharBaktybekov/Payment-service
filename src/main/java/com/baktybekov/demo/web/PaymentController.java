@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.*;
 
 @RestController
-@RequestMapping( "/pay")
+@RequestMapping(path = "/pay", produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class PaymentController {
     private final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
@@ -25,10 +25,7 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-    @PostMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_XML_VALUE
-    )
+    @PostMapping
     public ResponseEntity<Payment> pay(@RequestBody @Valid PaymentDTO paymentDTO) {
         Payment result = paymentService.pay(Payment.of(paymentDTO));
         URI location = ServletUriComponentsBuilder
@@ -40,9 +37,7 @@ public class PaymentController {
         return ResponseEntity.created(location).body(result);
     }
 
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-                produces = MediaType.APPLICATION_XML_VALUE,
-                path = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> check(@PathVariable UUID id) {
         Optional<Payment> payment = paymentService.check(id);
         if(payment.isPresent()) {
@@ -53,8 +48,7 @@ public class PaymentController {
         return ResponseEntity.badRequest().body("No such element");
     }
 
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_XML_VALUE)
+    @GetMapping
     public ResponseEntity<PaymentListResult> findAll() {
         return ResponseEntity.ok().body(
                 new PaymentListResult(paymentService.findAll())
