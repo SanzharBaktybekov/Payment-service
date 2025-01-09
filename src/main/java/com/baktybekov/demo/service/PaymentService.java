@@ -25,7 +25,7 @@ public class PaymentService {
     public Payment pay(Payment payment) {
         String paymentDestination = payment.getDestination();
         if(userRepository.findUserByUsername(paymentDestination).isEmpty()) {
-            throw new ReceiverOfPaymentNotFound("Not user with name:" + paymentDestination);
+            throw new ReceiverOfPaymentNotFound("Not found user with name:" + paymentDestination);
         }
         paymentRepository.save(payment);
         logger.info("\nPayment saved: {}", payment);

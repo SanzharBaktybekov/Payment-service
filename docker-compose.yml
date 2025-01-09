@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: "local"
+      POSTGRES_PASSWORD: "local"
+      POSTGRES_DB: "payment"
+    ports:
+      - "5433:5432"

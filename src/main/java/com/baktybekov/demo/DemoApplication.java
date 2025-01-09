@@ -8,13 +8,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @SpringBootApplication
 public class DemoApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
-	}
-
-	@Bean
-	public Validator validator() {
-		return new LocalValidatorFactoryBean();
 	}
 }

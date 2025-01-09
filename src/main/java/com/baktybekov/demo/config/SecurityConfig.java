@@ -1,6 +1,7 @@
 package com.baktybekov.demo.config;
 
 import com.baktybekov.demo.exception.UserAlreadyExistsException;
+import com.baktybekov.demo.model.User;
 import com.baktybekov.demo.persistence.UserRepository;
 import com.baktybekov.demo.properties.SampleUserDataProperties;
 import com.baktybekov.demo.service.UserService;
@@ -46,6 +47,8 @@ public class SecurityConfig {
         var service = (UserService) userDetailsService;
         return args -> {
             try {
+                service.registerNewUser(new User("Alice", "password"));
+                service.registerNewUser(new User("Bob", "password"));
                 service.registerNewUser(properties.toUser());
             } catch (UserAlreadyExistsException e) {
                 System.out.println(e.getMessage());
