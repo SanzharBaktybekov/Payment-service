@@ -1,18 +1,31 @@
-Для работы требуется аутентифицироваться через base authentication. 
-В файлах конфигурации указаны данные user.username user.password
+# Payment API Documentation
 
-Для ветки main:
+## Overview
+This API is designed to process payment requests. It requires Basic Authentication, with credentials provided in configuration files (`user.username` and `user.password`).
 
-Приложения принимает POST запрос по адресу "/pay".
-В теле запроса должна быть запись PaymentDTO, структура и пример:
-PaymentDTO (JSON) :
+### Branch: `main`
+
+#### POST `/pay`
+Handles the creation of a payment.
+
+**Request Body:**
+Must contain a valid `PaymentDTO` in JSON format. Example:
+```json
 {
     "from": "me",
     "to": "you",
     "amount": 1
 }
-Если данные в запросе корректны идет запись в базу:
-ответ Payment (XML):
+```
+
+**Validation Rules:**
+- `from`: Mandatory.
+- `to`: Mandatory.
+- `amount`: Must be greater than 0.
+
+**Response:**
+If the request is valid, the payment is recorded in the database, and the response is returned in XML format:
+```xml
 <Payment>
     <id>6a17af50-4ecd-4d1d-abff-42ec8f88bee4</id>
     <source>me</source>
@@ -20,15 +33,18 @@ PaymentDTO (JSON) :
     <amount>1</amount>
     <operationDate>2025-01-09T21:08:52.1826158</operationDate>
 </Payment>
+```
 
-Так же можно сделать GET запрос по адресу "/pay/{id}" например c указанным выше id будет "/pay/6a17af50-4ecd-4d1d-abff-42ec8f88bee4"
-
-Если данные не верны на этапе валидации клиенту возвращается Exception (XML). Например для:
+If the data is invalid, an exception is returned in XML format. Example for an invalid request:
+```json
 {
     "to": "you",
     "amount": -1
 }
-Ответ будет
+```
+
+**Error Response:**
+```xml
 <Map>
     <msg>There is an error</msg>
     <code>400</code>
@@ -38,26 +54,82 @@ PaymentDTO (JSON) :
         <from>Sender of payment should be provided!</from>
     </errors>
 </Map>
+```
 
-Содержащий имена полей, которые не прошли валидацию через jakarta.validation.constraints и сообщений к ним
+Errors contain the field names and messages generated using `jakarta.validation.constraints`.
 
-Для ветки dev:
+#### GET `/pay/{id}`
+Retrieves a payment by its ID.
 
-1. Запись PaymentDTO в теле не должна содержать пункта "from", так как это информация берется из данных аутентификации
+Example:
+Request:
+```
+GET /pay/6a17af50-4ecd-4d1d-abff-42ec8f88bee4
+```
+
+Response:
+```xml
+<Payment>
+    <id>6a17af50-4ecd-4d1d-abff-42ec8f88bee4</id>
+    <source>me</source>
+    <destination>you</destination>
+    <amount>1</amount>
+    <operationDate>2025-01-09T21:08:52.1826158</operationDate>
+</Payment>
+```
+
+### Branch: `dev`
+
+#### POST `/pay`
+Handles the creation of a payment.
+
+**Request Body:**
+Must contain a valid `PaymentDTO` in JSON format without the `from` field. The `from` field is derived from the authenticated user's credentials.
+
+Example:
+```json
 {
     "to": "you",
     "amount": 1
 }
+```
 
-2. Пункт "to" должен существовать в базе, иначе будет исключение "ReceiverOfPaymentNotFound"
+**Validation Rules:**
+- `to`: Must exist in the database. Otherwise, an exception is returned.
+- `amount`: Must be greater than 0.
+- `operationDate`: Optional. If not provided, the current date will be used.
 
+**Response:**
+If the request is valid, the payment is recorded in the database, and the response is returned in XML format:
+```xml
+<Payment>
+    <id>6a17af50-4ecd-4d1d-abff-42ec8f88bee4</id>
+    <source>authenticatedUser</source>
+    <destination>you</destination>
+    <amount>1</amount>
+    <operationDate>2025-01-09T21:08:52.1826158</operationDate>
+</Payment>
+```
 
+**Error Response:**
+If the recipient (`to`) does not exist in the database:
+```xml
+<Map>
+    <msg>ReceiverOfPaymentNotFound</msg>
+    <code>404</code>
+    <time>2025-01-09 21:13:09</time>
+</Map>
+```
 
-Можно указать operationDate
+If other validation rules are violated, the response will follow the format used in the `main` branch.
+
+**Request Body with Operation Date:**
+If you need to specify the operation date:
+```json
 {
     "to": "Alice",
     "amount": 1,
     "operationDate": "2019-01-09T21:30:27"
 }
+```
 
-Но если дата не будет указана, запишется текущая дата.
