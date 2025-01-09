@@ -1,5 +1,6 @@
 package com.baktybekov.demo.advice;
 
+import com.baktybekov.demo.exception.ReceiverOfPaymentNotFound;
 import com.baktybekov.demo.exception.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,5 +45,9 @@ public class ExceptionHandler {
         return ex.getMessage();
     }
 
-
+    @org.springframework.web.bind.annotation.ExceptionHandler(ReceiverOfPaymentNotFound.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleDestNotFound(ReceiverOfPaymentNotFound ex) {
+        return ex.getMessage();
+    }
 }
