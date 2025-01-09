@@ -40,14 +40,18 @@ public class ExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(UserAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleUserExists(UserAlreadyExistsException ex) {
-        return ex.getMessage();
+    public ResponseEntity<String> handleUserExists(UserAlreadyExistsException ex) {
+        return ResponseEntity
+                .badRequest()
+                .contentType(MediaType.APPLICATION_XML)
+                .body(ex.getMessage());
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(ReceiverOfPaymentNotFound.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleDestNotFound(ReceiverOfPaymentNotFound ex) {
-        return ex.getMessage();
+    public ResponseEntity<String> handleDestNotFound(ReceiverOfPaymentNotFound ex) {
+        return ResponseEntity
+                .badRequest()
+                .contentType(MediaType.APPLICATION_XML)
+                .body(ex.getMessage());
     }
 }

@@ -1,7 +1,7 @@
 package com.baktybekov.demo.model;
 
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotNull;
+        import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.math.BigDecimal;
