@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.*;
 
 @RestController
@@ -29,8 +30,11 @@ public class PaymentController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_XML_VALUE
     )
-    public ResponseEntity<Payment> pay(@RequestBody @Valid PaymentDTO paymentDTO) {
-        Payment result = paymentService.pay(Payment.of(paymentDTO));
+    public ResponseEntity<Payment> pay(
+            @RequestBody @Valid PaymentDTO paymentDTO,
+            Principal principal
+            ) {
+        Payment result = paymentService.pay(Payment.of(paymentDTO, principal.getName()));
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

@@ -18,10 +18,10 @@ public class Payment {
     private BigDecimal amount;
     private LocalDateTime operationDate;
 
-    public static Payment of(PaymentDTO paymentDTO) {
+    public static Payment of(PaymentDTO paymentDTO, String name) {
         var payment =  new Payment();
         payment.setId(UUID.randomUUID());
-        payment.setSource(paymentDTO.from());
+        payment.setSource(name);
         payment.setDestination(paymentDTO.to());
         payment.setAmount(paymentDTO.amount());
 
