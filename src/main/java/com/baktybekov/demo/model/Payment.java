@@ -24,7 +24,13 @@ public class Payment {
         payment.setSource(paymentDTO.from());
         payment.setDestination(paymentDTO.to());
         payment.setAmount(paymentDTO.amount());
-        payment.setOperationDate(paymentDTO.operationDate());
+
+        if(paymentDTO.operationDate() == null) {
+            payment.setOperationDate(LocalDateTime.now());
+        } else {
+            payment.setOperationDate(paymentDTO.operationDate());
+        }
+
         return payment;
     }
 
